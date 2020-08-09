@@ -19,7 +19,7 @@ class Order {
             // Catch some options manually
             if (part.includes("Deluxe")) {
                 this.ingredients.push({
-                    id: 10129,
+                    id: this.footlong ? 10129 : 10029,
                     val: "o_DeluxeMeatYes"
                 })
             }
@@ -32,7 +32,7 @@ class Order {
 
             // If option has no value, it's the product category (Turkey, Ham, etc)
             if (!option.value) {
-                this.product_id = option.id
+                this.product_id = this.footlong ? option.id : option.id - 100
                 continue
             }
 
@@ -47,7 +47,7 @@ class Order {
                 parameter.val = parameter.val.replace("Yes", "Extra")
             } else if (part.includes("Double") && option.type === "Cheese") {
                 this.ingredients.push({
-                    id: 10122,
+                    id: this.footlong ? 10122 : 10022,
                     val: "o_ExtraCheeseYes"
                 })
             }
@@ -67,50 +67,32 @@ class Order {
         return options.join(",\n")
     }
 
-    async place() {
-        const tab = await getTab()
-        const url = tab.url
-        let code
-
-        if (url !== "https://order.subway.com/en-US/orders/order-management") {
-            code = `
-            window.location = "https://order.subway.com/en-US/orders/order-management"
-            `
-        } else {
-            code = `
-            function postAjax(url, data, success) {
-                var params = typeof data == 'string' ? data : Object.keys(data).map(
-                        function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
-                    ).join('&');
-            
-                var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-                xhr.open('POST', url);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState>3 && xhr.status==200) { success(xhr.responseText); }
-                };
-                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                xhr.send(params);
-                return xhr;
-            }
-
-            const params = {
-                "ProductId": ${this.product_id},
-                "Quantity": 1,
-                "CartId": document.getElementById("initCartId").value,
-                "StoreId": document.getElementById("initStoreId").value,
-                ${this.getPostParameters()}
-            }
-
-            console.log("params", params)
-
-            postAjax('/RemoteOrder/Orders/AddItemAsync', params, (data) => { /*window.location.reload()*/ });
-            `
+    getScript() {
+        return `
+        function post(url, data, success) {
+            var params = typeof data == 'string' ? data : Object.keys(data).map(
+                    function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
+                ).join('&');
+        
+            var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            xhr.open('POST', url);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState>3 && xhr.status==200) { success(xhr.responseText); }
+            };
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send(params);
+            return xhr;
         }
 
-        chrome.tabs.executeScript(tab.ib, {
-            code: code
-        })
+        post('/RemoteOrder/Orders/AddItemAsync', {
+            "ProductId": ${this.product_id},
+            "Quantity": 1,
+            "CartId": document.getElementById("initCartId").value,
+            "StoreId": document.getElementById("initStoreId").value,
+            ${this.getPostParameters()}
+        }, (data) => { })
+        `
     }
 }
 

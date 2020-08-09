@@ -7,3 +7,10 @@ function getTab() {
         )
     })
 }
+
+async function execute(code) {
+    const tab = await getTab()
+    chrome.tabs.executeScript(tab.ib, {
+        code: code
+    })
+}
