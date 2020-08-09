@@ -25,7 +25,7 @@ const options = [
     },
     {
         "id": 30108,
-        "optionName": "Oven Roasted Chicken"
+        "optionName": "Oven-Roasted Chicken"
     },
     {
         "id": 30110,
@@ -121,9 +121,9 @@ const options = [
     {
         "id": 10109,
         "name": "Toasted",
-        "optionName": "Not Toasted",
+        "optionName": "Toasted",
         "type": "Breads",
-        "value": "o_BreadToastedNo"
+        "value": "o_BreadToastedYes"
     },
     {
         "id": 10132,
@@ -197,6 +197,13 @@ const options = [
     },
     {
         "id": 10112,
+        "name": "American",
+        "optionName": "Regular",
+        "type": "Cheese",
+        "value": "o_CheeseAmerWhite"
+    },
+    {
+        "id": 10112,
         "name": "White American",
         "optionName": "Regular",
         "type": "Cheese",
@@ -210,6 +217,13 @@ const options = [
         "value": "o_ExtraCheeseYes"
     },
     {
+        "id": 10129,
+        "name": "Double Meat",
+        "optionName": "More ",
+        "type": "Extras",
+        "value": "o_DeluxeMeatYes"
+    },
+    {
         "id": 10140,
         "name": "Banana Peppers",
         "optionName": "Regular",
@@ -221,7 +235,7 @@ const options = [
         "name": "Jalapeños",
         "optionName": "More",
         "type": "Veggies",
-        "value": "o_JalepenoExtra"
+        "value": "o_JalepenoYes"
     },
     {
         "id": 10136,
@@ -247,16 +261,23 @@ const options = [
     {
         "id": 10156,
         "name": "Chipotle Southwest",
-        "optionName": "Less",
+        "optionName": "Regular",
         "type": "Sauces",
-        "value": "o_ChipotleLight"
+        "value": "o_ChipotleYes"
+    },
+    {
+        "id": 10156,
+        "name": "Chipotle Southwest",
+        "optionName": "Regular",
+        "type": "Sauces",
+        "value": "o_ChipotleYes"
     },
     {
         "id": 10161,
         "name": "Creamy Sriracha",
-        "optionName": "More",
+        "optionName": "Regular",
         "type": "Sauces",
-        "value": "o_SrirachaExtra"
+        "value": "o_SrirachaYes"
     },
     {
         "id": 10155,

@@ -3,11 +3,68 @@ class Order {
         this.name = name
         this.order = order
         this.id = Math.floor(Math.random() * 1000000)
-        this.orderSteps = 0
+        this.footlong = this.order.includes("12\"")
+
+        this.init()
+
+        console.log(`${this.name}:`)
+        console.log(this.getPostParameters())
     }
 
-    getCategory() {
-        return CATEGORIES.find(c => this.order.includes(c))
+    init() {
+        this.ingredients = []
+        const parts = this.order.replace(/6" |12" |\./g, '').split(", ")
+
+        for (const part of parts) {
+            // Catch some options manually
+            if (part.includes("Deluxe")) {
+                this.ingredients.push({
+                    id: 10129,
+                    val: "o_DeluxeMeatYes"
+                })
+            }
+
+            const name = part.replace(/More |Less |Double /g, "")
+            const option = options.find(o => o.optionName === name || o.name === name)
+
+            // Skip invalid options
+            if (!option) continue
+
+            // If option has no value, it's the product category (Turkey, Ham, etc)
+            if (!option.value) {
+                this.product_id = option.id
+                continue
+            }
+
+            let parameter = {
+                id: this.footlong ? option.id : option.id - 100,
+                val: option.value
+            }
+
+            if (part.includes("Less")) {
+                parameter.val = parameter.val.replace("Yes", "Light")
+            } else if (part.includes("More")) {
+                parameter.val = parameter.val.replace("Yes", "Extra")
+            } else if (part.includes("Double") && option.type === "Cheese") {
+                this.ingredients.push({
+                    id: 10122,
+                    val: "o_ExtraCheeseYes"
+                })
+            }
+
+            this.ingredients.push(parameter)
+        }
+    }
+
+    getPostParameters() {
+        let options = []
+
+        for (let i = 0; i < this.ingredients.length; i++) {
+            options.push(`"Options[${i}][Id]": ${this.ingredients[i].id}`)
+            options.push(`"Options[${i}][Val]": "${this.ingredients[i].val}"`)
+        }
+
+        return options.join(",\n")
     }
 
     async place() {
@@ -37,29 +94,17 @@ class Order {
                 return xhr;
             }
 
-            const storeID = document.getElementById("initStoreId").value
-            const cartID = document.getElementById("initCartId").value
-
-            postAjax('/RemoteOrder/Orders/AddItemAsync', {
-                "ProductId": 30102,
+            const params = {
+                "ProductId": ${this.product_id},
                 "Quantity": 1,
-                "CartId": cartID,
-                "StoreId": storeID,
-                "Options[0][Id]": 10102,
-                "Options[0][Val]": "o_BreadFlat",
-                "Options[1][Id]": 10109,
-                "Options[1][Val]": "o_BreadToastedYes",
-                "Options[2][Id]": 10112,
-                "Options[2][Val]": "o_CheesePepperJack",
-                "Options[3][Id]": 10132,
-                "Options[3][Val]": "o_LettuceYes",
-                "Options[4][Id]": 10135,
-                "Options[4][Val]": "o_OnionsYes",
-                "Options[5][Id]": 10158,
-                "Options[5][Val]": "o_RanchYes",
-                "Options[6][Id]": 10122,
-                "Options[6][Val]": "o_ExtraCheeseYes"
-            }, (data) => { window.location.reload() });
+                "CartId": document.getElementById("initCartId").value,
+                "StoreId": document.getElementById("initStoreId").value,
+                ${this.getPostParameters()}
+            }
+
+            console.log("params", params)
+
+            postAjax('/RemoteOrder/Orders/AddItemAsync', params, (data) => { /*window.location.reload()*/ });
             `
         }
 
@@ -70,7 +115,11 @@ class Order {
 }
 
 const orders = [
-    new Order("Joey", '6" Turkey Breast Italian Herbs & Cheese, Toasted, Provolone, Lettuce, Mayonnaise, Chipotle Southwest, Salt, Pepper, Sub Spice.'),
-    new Order("Riley", '12" Oven-Roasted Chicken 9-Grain Wheat, Toasted, Provolone, Green Peppers, Banana Peppers, Less Mayonnaise, Salt, Pepper.'),
-    new Order("Casey", '6" Steak & Cheese 9-Grain Wheat, Toasted, Pepper Jack, Lettuce, Green Peppers, Less Jalapeños, Banana Peppers, Chipotle Southwest.')
+    new Order("Joey", '6" Turkey Breast, Italian Herbs & Cheese, Toasted, Provolone, Lettuce, Mayonnaise, Chipotle Southwest, Salt, Pepper, Sub Spice.'),
+    new Order("Riley", '12" Oven-Roasted Chicken, 9-Grain Wheat, Toasted, Provolone, Green Peppers, Banana Peppers, Less Mayonnaise, Salt, Pepper.'),
+    new Order("Casey", '6" Steak & Cheese, 9-Grain Wheat, Toasted, Pepper Jack, Lettuce, Green Peppers, Less Jalapeños, Banana Peppers, Chipotle Southwest.'),
+    new Order("Clara", '12" Black Forest Ham, 9-Grain Wheat, Not Toasted, White American, Lettuce, Tomatoes, Green Peppers, Red Onions, Banana Peppers, Mayonnaise, Less Subway® Herb & Garlic Oil, Salt, Pepper'),
+    new Order("Wesley", '12" Turkey Breast, 9-Grain Wheat, Not Toasted, White American, Lettuce, Tomatoes, Green Peppers, Red Onions, Banana Peppers, Mayonnaise, Less Subway® Herb & Garlic Oil, Salt, Pepper.'),
+    new Order("Mom/Dad", '12" Steak & Cheese, Italian, Toasted, Pepper Jack, Deluxe $1.50, More Green Peppers, Jalapeños, Chipotle Southwest.'),
+    new Order("Kaylee", '6" Turkey Breast, Italian, Double American, Lettuce')
 ]
