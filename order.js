@@ -2,6 +2,7 @@ class Order {
     constructor(name, order) {
         this.name = name
         this.order = order
+
         this.id = Math.floor(Math.random() * 1000000)
         this.footlong = this.order.includes("12\"")
 
@@ -97,11 +98,32 @@ class Order {
 }
 
 const orders = [
-    new Order("Joey", '6" Turkey Breast, Italian Herbs & Cheese, Toasted, Provolone, Lettuce, Mayonnaise, Chipotle Southwest, Salt, Pepper, Sub Spice.'),
-    new Order("Riley", '12" Oven-Roasted Chicken, 9-Grain Wheat, Toasted, Provolone, Green Peppers, Banana Peppers, Less Mayonnaise, Salt, Pepper.'),
-    new Order("Casey", '6" Steak & Cheese, 9-Grain Wheat, Toasted, Pepper Jack, Lettuce, Green Peppers, Less Jalapeños, Banana Peppers, Chipotle Southwest.'),
-    new Order("Clara", '12" Black Forest Ham, 9-Grain Wheat, Not Toasted, White American, Lettuce, Tomatoes, Green Peppers, Red Onions, Banana Peppers, Mayonnaise, Less Subway® Herb & Garlic Oil, Salt, Pepper'),
-    new Order("Wesley", '12" Turkey Breast, 9-Grain Wheat, Not Toasted, White American, Lettuce, Tomatoes, Green Peppers, Red Onions, Banana Peppers, Mayonnaise, Less Subway® Herb & Garlic Oil, Salt, Pepper.'),
-    new Order("Mom/Dad", '12" Steak & Cheese, Italian, Toasted, Pepper Jack, Deluxe $1.50, More Green Peppers, Jalapeños, Chipotle Southwest.'),
-    new Order("Kaylee", '6" Turkey Breast, Italian, Double American, Lettuce')
+    new Order(
+        "Joey",
+        '6" Turkey Breast, Italian Herbs & Cheese, Toasted, Provolone, Lettuce, Mayonnaise, Chipotle Southwest, Salt, Pepper, Sub Spice.'
+    ),
+    new Order(
+        "Riley",
+        '12" Oven-Roasted Chicken, 9-Grain Wheat, Toasted, Provolone, Green Peppers, Banana Peppers, Less Mayonnaise, Salt, Pepper.'
+    ),
+    new Order(
+        "Casey",
+        '6" Steak & Cheese, 9-Grain Wheat, Toasted, Pepper Jack, Lettuce, Green Peppers, Less Jalapeños, Banana Peppers, Chipotle Southwest.'
+    ),
+    new Order(
+        "Clara",
+        '12" Black Forest Ham, 9-Grain Wheat, Not Toasted, White American, Lettuce, Tomatoes, Green Peppers, Red Onions, Banana Peppers, Mayonnaise, Less Subway® Herb & Garlic Oil, Salt, Pepper'
+    ),
+    new Order(
+        "Wesley",
+        '12" Turkey Breast, 9-Grain Wheat, Not Toasted, White American, Lettuce, Tomatoes, Green Peppers, Red Onions, Banana Peppers, Mayonnaise, Less Subway® Herb & Garlic Oil, Salt, Pepper.'
+    ),
+    new Order(
+        "Mom/Dad",
+        '12" Steak & Cheese, Italian, Toasted, Pepper Jack, Deluxe $1.50, More Green Peppers, Jalapeños, Chipotle Southwest.'
+    ),
+    new Order(
+        "Kaylee",
+        '6" Turkey Breast, Italian, Double American, Lettuce'
+    )
 ]
