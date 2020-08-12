@@ -22,6 +22,7 @@
     "permissions": [
         "*://subway.com/*",
         "*://*.subway.com/*",
-        "tabs"
+        "tabs",
+        "storage"
     ]
 }
