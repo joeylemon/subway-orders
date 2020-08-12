@@ -9,12 +9,6 @@
         "48": "icons/icon48.png",
         "128": "icons/icon128.png"
     },
-    "background": {
-        "scripts": [
-            "background.js"
-        ],
-        "persistent": true
-    },
     "browser_action": {
         "default_title": "Order Subway",
         "default_popup": "ui.html"
