@@ -116,6 +116,8 @@ function getSavedOrders() {
 
 // Highlight selected orders
 function updateSelectedOrders() {
+    document.getElementById("submit").className = selectedOrders.length > 0 ? "submit" : "submit-disabled"
+
     orders.forEach(order => {
         const selected = selectedOrders.find(o => o.id === order.id)
         const elem = document.getElementById(order.id)
