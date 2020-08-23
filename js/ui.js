@@ -1,4 +1,4 @@
-let orders
+let orders = []
 let selectedOrders = []
 
 init()
@@ -109,7 +109,7 @@ async function initOrders() {
 function getSavedOrders() {
     return new Promise(resolve => {
         chrome.storage.sync.get(["orders"], function (result) {
-            resolve(result["orders"])
+            resolve(result["orders"] ? result["orders"] : [])
         })
     })
 }
